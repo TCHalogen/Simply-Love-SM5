@@ -56,6 +56,7 @@ SelectMusicOrCourse = function()
 end
 
 Branch.AllowScreenSelectProfile = function()
+  SM(1)
 	if ThemePrefs.Get("AllowScreenSelectProfile") then
 		return "ScreenSelectProfile"
 	else
@@ -64,6 +65,7 @@ Branch.AllowScreenSelectProfile = function()
 end
 
 Branch.AllowScreenSelectColor = function()
+  SM(2)
 	if ThemePrefs.Get("AllowScreenSelectColor") and not ThemePrefs.Get("RainbowMode") then
 		return "ScreenSelectColor"
 	else
@@ -114,11 +116,17 @@ end
 Branch.AfterSelectPlayMode = function()
 	-- 1/4th chance of playing a cutscene.
 	local rand = math.random(1, 4)
+  local pm = ToEnumShortString(GAMESTATE:GetPlayMode())
+  SM(pm)
+  -- SM('AfterSelectPlayMode')
+
 	if PREFSMAN:GetPreference("EasterEggs") and rand == 1 and
 			ThemePrefs.Get("VisualStyle") == "SRPG7"
 			and SL.Global.GameMode == "ITG" and not GAMESTATE:IsCourseMode() then
 		return "ScreenSrpgCutscenes"
-	else
+  -- else if pm == "Endless" then
+  --   return "ScreenPlaylist"
+  else
 		return SelectMusicOrCourse()
 	end
 end
