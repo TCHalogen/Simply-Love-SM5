@@ -115,8 +115,7 @@ Branch.AfterSelectPlayMode = function()
 	-- 1/4th chance of playing a cutscene.
 	local rand = math.random(1, 4)
   local pm = ToEnumShortString(GAMESTATE:GetPlayMode())
-  SM(pm)
-  -- SM('AfterSelectPlayMode')
+  SM('ScreenPlaylist')
 
   if pm == "Endless" then
     return "ScreenPlaylist"
