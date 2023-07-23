@@ -21,7 +21,7 @@ af[#af+1] = Def.ActorFrame {
 
   Def.Quad {
     InitCommand=function(self)
-      self:xy(0, 0)
+      self:xy(0,0)
       self:diffuse(boundColor)
     end
   },
@@ -29,7 +29,7 @@ af[#af+1] = Def.ActorFrame {
   Def.Quad {
     InitCommand=function(self)
       self:xy(0, 0)
-      self:zoomto(1, 0.2)
+      self:zoomto(1, 0.4)
       self:valign(0)
       self:diffuse(0, 0.5, 1, 1)
     end
@@ -49,8 +49,8 @@ af[#af+1] = Def.ActorFrame {
 -- I guess it makes sense since it is outlining a bounding box, but still...
 af[#af+1] = Border(boundW, boundH, 2)..{
   InitCommand=function(self)
-      self:xy(_screen.cx / 3, _screen.cy)
-      self:diffuse(boundBorderColor)
+    self:xy(_screen.cx / 3, _screen.cy)
+    self:diffuse(boundBorderColor)
   end
 }
 
@@ -63,27 +63,26 @@ af[#af+1] = Def.ActorFrame {
 
   Def.Quad {
     InitCommand=function(self)
-      self:xy(0, 0)
       self:diffuse(boundColor)
     end
   },
 
   Def.Quad {
     InitCommand=function(self)
-        self:xy(0, 0)
-        self:zoomto(1, 0.2)
-        self:valign(0)
-        self:diffuse(0, 0.5, 1, 1)
+      self:xy(0, 0)
+      self:zoomto(1, 0.4)
+      self:valign(0)
+      self:diffuse(0, 0.5, 1, 1)
     end
   },
 
   Def.Quad {
-      InitCommand=function(self)
-          self:xy(0, 0)
-          self:zoomto(1, 0.2)
-          self:valign(1)
-          self:diffuse(0.5, 0, 1, 1)
-      end
+    InitCommand=function(self)
+      self:xy(0, 0)
+      self:zoomto(1, 0.2)
+      self:valign(1)
+      self:diffuse(0.5, 0, 1, 1)
+    end
   },
 }
 
@@ -103,7 +102,6 @@ af[#af+1] = Def.ActorFrame {
 
   Def.Quad {
     InitCommand=function(self)
-      self:xy(0, 0)
       self:diffuse(boundColor)
     end
   },
@@ -111,7 +109,7 @@ af[#af+1] = Def.ActorFrame {
   Def.Quad {
     InitCommand=function(self)
       self:xy(0, 0)
-      self:zoomto(1, 0.2)
+      self:zoomto(1, 0.4)
       self:valign(0)
       self:diffuse(0, 0.5, 1, 1)
     end
