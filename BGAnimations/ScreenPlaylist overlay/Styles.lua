@@ -1,5 +1,13 @@
-local boxW = _screen.w/2 - _screen.w/16
-local boxH = _screen.h * 0.75
-local boxColor = {0,0,0,0.4}
-local boxBorderWidth = 2
-local boxBorderColor = {0.5,0.5,0.5,1}
+-- local innerW
+-- local innerH
+-- local innerColor
+
+local styles = {
+  boundW = _screen.w/3 - _screen.w/16, 
+  boundH = _screen.h * 0.75, 
+  boundColor = {0, 0, 0, 0.5}, 
+  boundBorderWidth = 2,
+  boundBorderColor = {0.5,0.5,0.5,1}
+}
+
+return styles
