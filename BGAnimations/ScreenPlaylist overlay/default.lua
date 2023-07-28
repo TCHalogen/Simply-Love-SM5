@@ -40,7 +40,7 @@ af[#af+1] = Def.ActorFrame {
     Def.Quad {
       Name="LeftDescription",
       InitCommand=function(self)
-        self:diffuse(1, 1, 1, 0.15)
+        self:diffuse(1, 1, 1, 0.1)
       end
     },
 
@@ -52,10 +52,30 @@ af[#af+1] = Def.ActorFrame {
         self:horizalign(left)
         self:xy(-0.47,0)
         self:valign(0.5)
-        self:zoomto(0.95, 0.75)
+        self:zoomto(0.9, 0.8)
       end
     }
   },
+
+  Def.ActorFrame {
+    Name="LeftCenterFrame",
+    InitCommand=function(self)
+      self:y(0.15)
+      self:valign(1)
+      self:zoomto(1, 0.5)
+    end,
+
+    Def.Sprite {
+      Name="LeftImage",
+      Texture=THEME:GetPathB("ScreenPlaylist", "overlay/assets/plus.png"),
+      InitCommand=function(self)
+        self:xy(0,0)
+        self:zoomto(0.65, 0.65)
+      end
+    },
+  },
+
+
 
   Def.ActorFrame {
     Name="LeftHeaderFrame",
@@ -68,7 +88,7 @@ af[#af+1] = Def.ActorFrame {
     Def.Quad {
       Name="LeftHeaderBox",
       InitCommand=function(self)
-        self:diffuse(1, 1, 1, 0.15)
+        self:diffuse(1, 1, 1, 0.1)
       end
     },
 
