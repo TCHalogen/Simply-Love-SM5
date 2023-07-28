@@ -21,7 +21,7 @@ af[#af+1] = Def.ActorFrame {
 
   Def.Quad {
     InitCommand=function(self)
-      self:xy(0,0)
+      self:xy(0,0) -- WHY
       self:diffuse(boundColor)
     end
   },
