@@ -33,7 +33,7 @@ local left = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Bold",
       Name="LeftText",
-      Text="Create New",
+      Text=THEME:GetString("ScreenPlaylist", "CreateHeader"),
       InitCommand=function(self)
         self:xy(0, 0)
         self:zoomto(0.6, 0.4)
@@ -59,7 +59,7 @@ local left = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Normal",
       Name="LeftDescriptionText",
-      Text="Create a brand new playlist.\n\nBuild based off of difficulty levels,\nsong packs, lengths, and much more.",
+      Text=THEME:GetString("ScreenPlaylist", "CreateDescription"),
       InitCommand=function(self)
         self:horizalign(left)
         self:xy(-0.47, -0.4)

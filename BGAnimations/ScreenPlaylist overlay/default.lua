@@ -1,6 +1,9 @@
 -- Contains styling/design parameters for UI elements.
 local Styles = LoadActor("./Styles.lua")
 local af = Def.ActorFrame {}
+local test = SCREENMAN:GetTopScreen()
+
+SM(test)
 
 -- Left side box.
 af[#af+1] = Def.ActorFrame {
@@ -13,6 +16,7 @@ af[#af+1] = Def.ActorFrame {
   }
 }
 
+-- Middle box.
 af[#af+1] = Def.ActorFrame {
   LoadActor("./intro/middle.lua", Styles),
   Border(Styles.boundW, Styles.boundH, 2)..{
@@ -23,6 +27,7 @@ af[#af+1] = Def.ActorFrame {
   }
 }
 
+-- Right box.
 af[#af+1] = Def.ActorFrame {
   LoadActor("./intro/right.lua", Styles),
   Border(Styles.boundW, Styles.boundH, 2)..{

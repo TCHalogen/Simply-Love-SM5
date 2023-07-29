@@ -32,7 +32,7 @@ local middle = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Bold",
       Name="MiddleText",
-      Text="View/Play",
+      Text=THEME:GetString("ScreenPlaylist", "ViewHeader"),
       InitCommand=function(self)
         self:xy(0, 0)
         self:zoomto(0.6, 0.4)
@@ -76,7 +76,7 @@ local middle = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Normal",
       Name="MiddleDescriptionText",
-      Text="See all existing playlists. \n\nFilter based on playlist difficulties,\nlengths, packs and more.",
+      Text=THEME:GetString("ScreenPlaylist", "ViewDescription"),
       InitCommand=function(self)
         self:horizalign(left)
         self:xy(-0.47, -0.4)

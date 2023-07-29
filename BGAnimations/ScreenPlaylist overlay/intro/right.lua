@@ -32,7 +32,7 @@ local right = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Bold",
       Name="RightText",
-      Text="Edit",
+      Text=THEME:GetString("ScreenPlaylist", "EditHeader"),
       InitCommand=function(self)
         self:xy(0, 0)
         self:zoomto(0.25, 0.4)
@@ -76,7 +76,7 @@ local right = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Normal",
       Name="RightDescriptionText",
-      Text="Edit existing playlists.\n\nChange/modify a playlist on your local\n profile or machine.",
+      Text=THEME:GetString("ScreenPlaylist", "EditDescription"),
       InitCommand=function(self)
         self:horizalign(left)
         self:xy(-0.47, -0.4)
