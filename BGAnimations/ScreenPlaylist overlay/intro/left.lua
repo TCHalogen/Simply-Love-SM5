@@ -1,4 +1,4 @@
-local Styles = LoadActor("../Styles.lua")
+local Styles = ...
 
 local left = Def.ActorFrame {
   Name="LeftFrame",
@@ -37,7 +37,6 @@ local left = Def.ActorFrame {
       InitCommand=function(self)
         self:xy(0, 0)
         self:zoomto(0.6, 0.4)
-        -- self:zoomto(0.65,0.35)
       end
     },
   },
@@ -60,12 +59,12 @@ local left = Def.ActorFrame {
     Def.BitmapText {
       Font="Common Normal",
       Name="LeftDescriptionText",
-      Text="Create a brand new playlist to be used \nfor the Playlist mode.\n\nChoose from a range of desired\ndifficulty levels, song packs, break \ntimes, lengths, and much more.",
+      Text="Create a brand new playlist.\n\nBuild based off of difficulty levels,\nsong packs, lengths, and much more.",
       InitCommand=function(self)
         self:horizalign(left)
-        self:xy(-0.47,0)
-        self:valign(0.5)
-        self:zoomto(0.9, 0.8)
+        self:xy(-0.47, -0.4)
+        self:valign(0)
+        self:zoomto(0.9, 0.55)
       end
     }
   },

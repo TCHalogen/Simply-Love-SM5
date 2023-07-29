@@ -3,7 +3,7 @@ local Styles = LoadActor("./Styles.lua")
 local af = Def.ActorFrame {}
 
 -- Left side box.
-af[#af+1] = LoadActor("./intro/left.lua")
+af[#af+1] = LoadActor("./intro/left.lua", Styles)
 af[#af+1] = Border(Styles.boundW, Styles.boundH, 2)..{
   InitCommand=function(self)
     self:xy(_screen.cx / 3, _screen.cy)
@@ -12,7 +12,7 @@ af[#af+1] = Border(Styles.boundW, Styles.boundH, 2)..{
 }
 
 -- Middle box.
-af[#af+1] = LoadActor("./intro/middle.lua")
+af[#af+1] = LoadActor("./intro/middle.lua", Styles)
 af[#af+1] = Border(Styles.boundW, Styles.boundH, 2)..{
   InitCommand=function(self)
     self:xy(_screen.cx, _screen.cy)
@@ -21,7 +21,7 @@ af[#af+1] = Border(Styles.boundW, Styles.boundH, 2)..{
 }
 
 -- Right box.
-af[#af+1] = LoadActor("./intro/right.lua")
+af[#af+1] = LoadActor("./intro/right.lua", Styles)
 af[#af+1] = Border(Styles.boundW, Styles.boundH, 2)..{
   InitCommand=function(self)
     self:xy(_screen.cx + (_screen.cx / 1.5), _screen.cy)
