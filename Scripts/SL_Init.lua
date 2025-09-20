@@ -474,6 +474,11 @@ SL = {
 		Held=1,
 		HitMine=-1
 	},
+  -- Fields used for the purpose of connecting to the external test
+  -- service.
+  Test = {
+    AutoSubmit = false
+  },
 	-- Fields used to determine whether or not we can connect to the
 	-- GrooveStats services.
 	GrooveStats = {

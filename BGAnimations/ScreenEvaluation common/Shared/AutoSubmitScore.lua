@@ -537,6 +537,10 @@ local af = Def.ActorFrame {
 								usedCmod=(GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil),
 								comment=CreateCommentString(player),
 							}
+              Trace("Associated Chart Hash: " .. SL[pn].Streams.Hash)
+              Trace("Rate used for song: " .. body["player1"].rate)
+              Trace("Score obtained: " .. body["player1"].score)
+              Trace("C-Mod used: ", body["player1"].usedCmod)
 							sendRequest = true
 							submitForPlayer = true
 						end
@@ -555,7 +559,7 @@ local af = Def.ActorFrame {
 			if sendRequest then
 				-- Unjoined players won't have the text displayed.
              
-                self:GetParent():GetChild("P1SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
+        self:GetParent():GetChild("P1SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
 				self:GetParent():GetChild("P2SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
 					
 				self:playcommand("MakeGrooveStatsRequest", {
@@ -568,6 +572,17 @@ local af = Def.ActorFrame {
 				args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
 				})
 			end
+
+      -- For the purpose of testing, we can isolate this out of the validation
+      -- checks for now
+      Trace("Testing submission...")
+      
+      self:playcommand("MakeTestRequest", {
+        -- endpoint=
+        body=JsonEncode(body),
+        timeout=30,
+        args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
+      })
 		end
 	}
 }
