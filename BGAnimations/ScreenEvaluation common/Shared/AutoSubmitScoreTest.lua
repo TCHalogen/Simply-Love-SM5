@@ -1,6 +1,6 @@
 -- There's an option in place for enabling the test harness; we can use
 -- similar conditions for whether or not we want to keep it up.
-if not IsServiceAllowed(SL.Test.AutoSubmit) or GAMESTATE:IsCourseMode() then return end
+-- if not IsServiceAllowed(SL.Test.AutoSubmit) or GAMESTATE:IsCourseMode() then return end
 
 -- For now, we'll take these from the GrooveStats file.
 -- If integration w/ GS becomes an option, we can deduplicate it later.
@@ -71,7 +71,13 @@ local af = Def.ActorFrame {
   end,
   RequestResponseTestActor(17, 50)..{
     OnCommand=function(self)
-      SCREENMAN:SystemMessage("ass")
+      SM("RequestResponseTestActor from ScreenEvalCommon")
     end
   }
 }
+
+-- Anonymous callback function to handle the submission.
+local AutoSubmitTestRequestProcessor = function(res, overlay)
+  SCREENMAN:SystemMessage("AutoSubmitTestRequestProcessor from ScreenEvalCommon")
+  
+end

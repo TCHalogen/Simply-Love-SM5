@@ -307,6 +307,16 @@ end
 
 LoadModules()
 
+-- Callback for new functionality test.
+local NewSessionTestRequestProcessor = function(res, testInfo)
+
+  -- not entirely sure how testInfo gets populated here,
+  -- nor am I sure how gsInfo seems to get information to the callback
+  -- guess we gotta find out!
+  SM("New session test request processor hit!")
+
+end
+
 -- -----------------------------------------------------------------------
 -- The GrooveStats service info pane.
 -- We put this in ScreenSystemLayer because if people move through the menus too fast,
@@ -316,7 +326,7 @@ LoadModules()
 
 local NewSessionRequestProcessor = function(res, gsInfo)
 	if gsInfo == nil then return end
-	
+
 	local groovestats = gsInfo:GetChild("GrooveStats")
 	local service1 = gsInfo:GetChild("Service1")
 	local service2 = gsInfo:GetChild("Service2")
@@ -559,9 +569,45 @@ t[#t+1] = Def.ActorFrame{
 				})
 			end
 		end
-	}
+	},
 }
 
+t[#t+1] = Def.ActorFrame{
+  Name="TestInfo",
+  InitCommand=function(self)
+    self:zoom(0.8):x(10):y(40)
+  end,
+
+  ScreenChangedMessageCommand=function(self)
+    local screen = SCREENMAN:GetTopScreen()
+		if screen:GetName() == "ScreenTitleMenu" or screen:GetName() == "ScreenTitleJoin" then
+			self:queuecommand("Reset")
+			self:diffusealpha(0):sleep(0.2):linear(0.4):diffusealpha(1):visible(true)
+			self:queuecommand("SendRequest")
+		else
+			self:visible(false)
+		end
+  end,
+
+  RequestResponseTestActor(20, 0)..{
+		SendRequestCommand=function(self)
+      
+			if ThemePrefs.Get("EnableTest") then
+        SM("RequestResponseTestActor?")
+
+        -- TODO: figure out why doesn't appear to be triggering
+        -- the processor function...
+				self:playcommand("SubmissionRequestCommand", {
+					endpoint="api/v1",
+					method="GET",
+					timeout=10,
+					callback=NewSessionTestRequestProcessor,
+					args=self:GetParent()
+				})
+			end
+		end
+	}
+}
 -- -----------------------------------------------------------------------
 -- Loads the UnlocksCache from disk for SRPG unlocks.
 LoadUnlocksCache()

@@ -6,7 +6,7 @@ GrooveStatsURL = function()
 	local dir = THEME:GetCurrentThemeDirectory() .. "Other/"
 	local uat = dir .. "GrooveStats_UAT.txt"
 	local boogie = ThemePrefs.Get("EnableBoogieStats")
-  local test = ThemePrefs.Get("EnableTest") -- not used at the moment, but for later
+
 	if not FILEMAN:DoesFileExist(uat) then 
 		if boogie and string.find(PREFSMAN:GetPreference("HttpAllowHosts"), "boogiestats.andr.host") then url_prefix = "https://boogiestats.andr.host/" 
 		else url_prefix = "https://api.groovestats.com/" end
@@ -14,7 +14,7 @@ GrooveStatsURL = function()
 		url_prefix = "http://127.0.0.1:5000/"
 	end
 	return url_prefix
-end
+end           
 
 
 -- -----------------------------------------------------------------------

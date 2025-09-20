@@ -1,58 +1,67 @@
--- For now, we're just going to mirror GrooveStats' helper structure, but
--- this will likely deviate once actual functionality gets put into place.
 TestURL = function()
+  -- For now, we're just going to mirror GrooveStats' helper structure, but
+  -- this will likely deviate once actual functionality gets put into place.
+  local test = ThemePrefs.Get("EnableTest") -- not used at the moment, but for later
   local url_prefix = "http://127.0.0.1:5000/"
   return url_prefix
 end
 
-RequestResponseTestActor = function(x, y)
+-- ----------
+-- See: RequestResponseActor, SL-Helpers-GrooveStats.lua
+-- This isn't quite the same, but the functionality is derived from
+-- it.
+-- ----------
+RequestResponseTestActor=function(x, y)
   local url_prefix = TestURL()
+
   return Def.ActorFrame{
-    InitCommand = function(self)
+    InitCommand=function(self)
       self.request_time = -1
       self.timeout = -1
       self.request_handler = nil
       self.leaving_screen = false
       self:xy(x, y)
     end,
-    CancelCommand = function (self)
+    CancelCommand=function(self)
       self.leaving_screen = true
       if self.request_handler then
         self.request_handler:Cancel()
         self.request_handler = nil
       end
     end,
-    OffCommand = function (self)
+    OffCommand=function(self)
       self.leaving_screen = true
       if self.request_handler then
         self.request_handler:Cancel()
         self.request_handler = nil
       end
     end,
-    SubmissionRequestCommand = function(self, params)
+    SubmissionRequestCommand=function(self, params)
+      Trace("testing again")
       local url_prefix = TestURL()
       self:stoptweening()
       if not params then
-        Warn("No params specified for MakeTestRequestCommand.")
+        Warn("No params specified for SubmissionRequestCommand.")
       end
 
+      Trace("testing again")
       if self.request_handler then
         self.request_handler:Cancel()
         self.request_handler = nil
       end
       self:GetChild("Spinner"):visible(true);
 
-      -- proof of concept won't have an endpoint, so let's protect
-      -- against nil
+      Trace("testing again")
+      local timeout = params.timeout or 30
       local endpoint = params.endpoint or ""
-      local headers = params.headers or "" -- for now
+      local headers = params.headers
       local body = params.body
 
       -- add dynamism later
-      local method = "POST"
+      local method = "GET"
 
       self.request_handler = NETWORK:HttpRequest{
-        url=url_prefix, -- PoC captures at 5000 for now
+        url=url_prefix..endpoint, -- PoC captures at 5000 for now
         method=method,
         body=body,
         headers=headers,
@@ -89,43 +98,6 @@ RequestResponseTestActor = function(x, y)
           end
         end
       }
-    end,
-    -- Borrowing this from the GrooveStats request call code, for now.
-    Def.ActorFrame{
-      Name="Spinner",
-      InitCommand=function(self)
-        self:visible(false)
-      end,
-			Def.Sprite{
-				Texture=THEME:GetPathG("", "LoadingSpinner 10x3.png"),
-				Frames=Sprite.LinearFrames(30,1),
-				InitCommand=function(self)
-					self:zoom(0.15)
-					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
-				end,
-				VisualStyleSelectedMessageCommand=function(self)
-					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
-				end
-			},
-			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-				InitCommand=function(self)
-					self:zoom(0.9)
-					-- Leaderboard should be white since it's on a black background.
-					self:diffuse(DarkUI() and name ~= "Leaderboard" and Color.Black or Color.White)
-				end,
-				UpdateSpinnerCommand=function(self, params)
-					-- Only display the countdown after we've waiting for some amount of time.
-					if params.timeout - params.remaining_time > 2 then
-						self:visible(true)
-					else
-						self:visible(false)
-					end
-					if params.remaining_time > 1 then
-						self:settext(math.floor(params.remaining_time))
-					end
-				end
-			}
-    }
+    end
   }
-
 end

@@ -573,16 +573,16 @@ local af = Def.ActorFrame {
 				})
 			end
 
-      -- For the purpose of testing, we can isolate this out of the validation
-      -- checks for now
-      Trace("Testing submission...")
+      -- -- For the purpose of testing, we can isolate this out of the validation
+      -- -- checks for now
+      -- Trace("Testing submission...")
       
-      self:playcommand("MakeTestRequest", {
-        -- endpoint=
-        body=JsonEncode(body),
-        timeout=30,
-        args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
-      })
+      -- self:playcommand("MakeTestRequest", {
+      --   -- endpoint=
+      --   body=JsonEncode(body),
+      --   timeout=30,
+      --   args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
+      -- })
 		end
 	}
 }
