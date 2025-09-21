@@ -316,6 +316,16 @@ IsServiceAllowed = function(condition)
 		(SL.P1.ApiKey ~= "" or SL.P2.ApiKey ~= ""))
 end
 
+IsTestServiceAllowed = function(condition)
+  return (condition and
+    ThemePrefs.Get("EnableTest") and
+    SL.Test.IsConnected and
+    GAMESTATE:GetCurrentGame():GetName()=="dance" and
+    SL.Global.GameMode == "ITG" 
+    -- don't care about API keys for our stuff for now
+  )
+end
+
 -- -----------------------------------------------------------------------
 -- ValidForGrooveStats.lua contains various checks requested by Archi
 -- to determine whether the score should be permitted on GrooveStats
