@@ -329,9 +329,9 @@ local NewSessionTestRequestProcessor = function(res, testInfo)
     SL.Test.GetScores = false
     local error = res.error and ToEnumShortString(res.error) or nil
 
-    if error == "Timeout" then
-      test:settext("Timed Out")
-    end
+    -- if error == "Timeout" then
+      test:settext("Unable to connect to test server.")
+    -- end
     return;
   end
 
@@ -342,11 +342,9 @@ local NewSessionTestRequestProcessor = function(res, testInfo)
   SL.Test.AutoSubmit = true
   SL.Test.GetScores = true
   SL.Test.Leaderboard = true
-  
+
   test:settext("✔ Connected to test server.")
   local body = JsonDecode(res.body)
-  SM(body)
-
 end
 
 -- -----------------------------------------------------------------------

@@ -20,7 +20,6 @@ RequestResponseTestActor = function(x, y)
   return Def.ActorFrame{
     SubmissionRequestCommand=function(self, params)
       self:stoptweening()
-      SM(params, 10)
       if not params then
         Warn("No params specified for SubmissionRequestCommand.")
       end
@@ -36,8 +35,6 @@ RequestResponseTestActor = function(x, y)
       local headers = params.headers
       local body = params.body
       local method = params.method
-
-      SM(params, 15)
 
       self.request_handler = NETWORK:HttpRequest{
         url=url_prefix..endpoint, -- PoC captures at 5000 for now
