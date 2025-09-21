@@ -70,6 +70,7 @@ RequestResponseActor = function(x, y)
 			self.request_handler = nil
 			self.leaving_screen = false
 			self:xy(x, y)
+      Trace("GrooveStats Init")
 		end,
 		CancelCommand=function(self)
 			self.leaving_screen = true
@@ -77,6 +78,7 @@ RequestResponseActor = function(x, y)
 			if self.request_handler then
 				self.request_handler:Cancel()
 				self.request_handler = nil
+        Trace("GrooveStats Cancel")
 			end
 		end,
 		OffCommand=function(self)
@@ -85,6 +87,7 @@ RequestResponseActor = function(x, y)
 			if self.request_handler then
 				self.request_handler:Cancel()
 				self.request_handler = nil
+        Trace("GrooveStats Off")
 			end
 		end,
 		MakeGrooveStatsRequestCommand=function(self, params)

@@ -313,7 +313,15 @@ local NewSessionTestRequestProcessor = function(res, testInfo)
   -- not entirely sure how testInfo gets populated here,
   -- nor am I sure how gsInfo seems to get information to the callback
   -- guess we gotta find out!
-  Trace("New session test request processor hit!")
+  if testInfo == nil then return end
+
+  local test = testInfo:GetChild("Test")
+  if res.error or res.statusCode ~= 200 then
+    local error = res.error and ToEnumShortString(res.error) or nil
+    if error == "Timeout" then
+      test:settext("Timed Out")
+    end
+  end
 
 end
 
@@ -568,7 +576,7 @@ t[#t+1] = Def.ActorFrame{
 					args=self:GetParent()
 				})
 			end
-		end
+		end,
 	}
 }
 
@@ -598,22 +606,27 @@ t[#t+1] = Def.ActorFrame{
       self:visible(ThemePrefs.Get("EnableTest"))
       self:horizalign(left)
       DiffuseText(self)
-    end
+    end,
+    -- VisualStyleSelectedMessageCommand=function(self) 
+    --   DiffuseText(self) 
+    -- end,
+		-- ResetCommand=function(self) 
+    --   self:settext("")
+    -- end
   },
   -------------------------------------------------------------------
   RequestResponseTestActor(20, 0)..{
 		SendTestRequestCommand=function(self)
-        SM("RequestResponseTestActor?") -- does fire
         local details = {
           endpoint="api/v1",
           method="GET",
           timeout=30,
-          callback=NewSessionTestRequestProcessor
+          callback=NewSessionTestRequestProcessor,
+          args=self:GetParent()
         }
-        self:playcommand("SubmissionRequestCommand", details)
-        -- SM("RequestResponseTestActor2?")
+        self:playcommand("SubmissionRequest", details)
 		end
-	},
+	}
 }
 SM(t)
 

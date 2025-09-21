@@ -1,12 +1,12 @@
-TestURL = function()
-  -- For now, we're just going to mirror GrooveStats' helper structure, but
-  -- this will likely deviate once actual functionality gets put into place.
-  local test = ThemePrefs.Get("EnableTest") -- not used at the moment, but for later
-  local url_prefix = "http://127.0.0.1:5000/"
-    Trace("Testing TestURL")
-  return url_prefix
+-- TestURL = function()
+--   -- For now, we're just going to mirror GrooveStats' helper structure, but
+--   -- this will likely deviate once actual functionality gets put into place.
+--   local test = ThemePrefs.Get("EnableTest") -- not used at the moment, but for later
+--   local url_prefix = "http://127.0.0.1:5000/"
+--     Trace("Testing TestURL")
+--   return url_prefix
 
-end
+-- end
 
 -- ----------
 -- See: RequestResponseActor, SL-Helpers-GrooveStats.lua
@@ -15,36 +15,26 @@ end
 -- ----------
 RequestResponseTestActor = function(x, y)
   -- Trace("Do we even hit the start of this function?")
-  local url_prefix = TestURL()
+  local url_prefix = "http://127.0.0.1:5000/"
 
   SM("RequestResponseTestActorFunc?") -- doesn't fire
 
   return Def.ActorFrame{
-    InitCommand=function(self)
-      Trace("Init?")
-    end,
-    OnCommand=function(self)
-      Trace("On?")
-    end,
-    TestCommand=function(self)
-      Trace("Test?")
-    end,
     SubmissionRequestCommand=function(self, params)
-      Trace("SubmissionRequestCommand-Test")
-      -- local url_prefix = TestURL()
+      -- SM("Submission request command!")
+      -- -- local url_prefix = TestURL()
       self:stoptweening()
+      -- SM(params, 10)
       if not params then
         Warn("No params specified for SubmissionRequestCommand.")
       end
 
-      Trace("testing again")
       if self.request_handler then
         self.request_handler:Cancel()
         self.request_handler = nil
       end
       self:GetChild("Spinner"):visible(true);
 
-      Trace("testing again")
       local timeout = params.timeout or 30
       local endpoint = params.endpoint or ""
       local headers = params.headers
@@ -61,6 +51,7 @@ RequestResponseTestActor = function(x, y)
         connectTimeout=60,
         transferTimeout=60,
         onResponse=function(res)
+          SM(res, 10)
           -- we've received a response, so allow us to receive others
           self.request_handler = nil
 
