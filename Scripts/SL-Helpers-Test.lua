@@ -3,7 +3,9 @@ TestURL = function()
   -- this will likely deviate once actual functionality gets put into place.
   local test = ThemePrefs.Get("EnableTest") -- not used at the moment, but for later
   local url_prefix = "http://127.0.0.1:5000/"
+    Trace("Testing TestURL")
   return url_prefix
+
 end
 
 -- ----------
@@ -11,34 +13,25 @@ end
 -- This isn't quite the same, but the functionality is derived from
 -- it.
 -- ----------
-RequestResponseTestActor=function(x, y)
+RequestResponseTestActor = function(x, y)
+  -- Trace("Do we even hit the start of this function?")
   local url_prefix = TestURL()
+
+  SM("RequestResponseTestActorFunc?") -- doesn't fire
 
   return Def.ActorFrame{
     InitCommand=function(self)
-      self.request_time = -1
-      self.timeout = -1
-      self.request_handler = nil
-      self.leaving_screen = false
-      self:xy(x, y)
+      Trace("Init?")
     end,
-    CancelCommand=function(self)
-      self.leaving_screen = true
-      if self.request_handler then
-        self.request_handler:Cancel()
-        self.request_handler = nil
-      end
+    OnCommand=function(self)
+      Trace("On?")
     end,
-    OffCommand=function(self)
-      self.leaving_screen = true
-      if self.request_handler then
-        self.request_handler:Cancel()
-        self.request_handler = nil
-      end
+    TestCommand=function(self)
+      Trace("Test?")
     end,
     SubmissionRequestCommand=function(self, params)
-      Trace("testing again")
-      local url_prefix = TestURL()
+      Trace("SubmissionRequestCommand-Test")
+      -- local url_prefix = TestURL()
       self:stoptweening()
       if not params then
         Warn("No params specified for SubmissionRequestCommand.")
@@ -80,10 +73,6 @@ RequestResponseTestActor=function(x, y)
               body = JsonDecode(res.body)
             end
 
-            -- handle connection errors later
-
-            --
-
             if self.leaving_screen then
               return
             end
@@ -94,10 +83,44 @@ RequestResponseTestActor=function(x, y)
                 params.callback(res, params.args)
               end
             end
-
           end
         end
       }
-    end
+    end,
+		Def.ActorFrame{
+			Name="Spinner",
+			InitCommand=function(self)
+				self:visible(false)
+			end,
+			Def.Sprite{
+				Texture=THEME:GetPathG("", "LoadingSpinner 10x3.png"),
+				Frames=Sprite.LinearFrames(30,1),
+				InitCommand=function(self)
+					self:zoom(0.15)
+					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
+				end,
+				VisualStyleSelectedMessageCommand=function(self)
+					self:diffuse(GetHexColor(SL.Global.ActiveColorIndex, true))
+				end
+			},
+			LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+				InitCommand=function(self)
+					self:zoom(0.9)
+					-- Leaderboard should be white since it's on a black background.
+					-- self:diffuse(DarkUI() and name ~= "Leaderboard" and Color.Black or Color.White)
+				end,
+				-- UpdateSpinnerCommand=function(self, params)
+				-- 	-- Only display the countdown after we've waiting for some amount of time.
+				-- 	if params.timeout - params.remaining_time > 2 then
+				-- 		self:visible(true)
+				-- 	else
+				-- 		self:visible(false)
+				-- 	end
+				-- 	if params.remaining_time > 1 then
+				-- 		self:settext(math.floor(params.remaining_time))
+				-- 	end
+				-- end
+			}
+		},
   }
 end

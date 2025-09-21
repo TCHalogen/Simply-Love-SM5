@@ -313,7 +313,7 @@ local NewSessionTestRequestProcessor = function(res, testInfo)
   -- not entirely sure how testInfo gets populated here,
   -- nor am I sure how gsInfo seems to get information to the callback
   -- guess we gotta find out!
-  SM("New session test request processor hit!")
+  Trace("New session test request processor hit!")
 
 end
 
@@ -569,45 +569,54 @@ t[#t+1] = Def.ActorFrame{
 				})
 			end
 		end
-	},
+	}
 }
 
 t[#t+1] = Def.ActorFrame{
   Name="TestInfo",
   InitCommand=function(self)
-    self:zoom(0.8):x(10):y(40)
+    self:zoom(0.8):x(10):y(35)
   end,
-
   ScreenChangedMessageCommand=function(self)
     local screen = SCREENMAN:GetTopScreen()
 		if screen:GetName() == "ScreenTitleMenu" or screen:GetName() == "ScreenTitleJoin" then
-			self:queuecommand("Reset")
+			-- self:queuecommand("Reset")
 			self:diffusealpha(0):sleep(0.2):linear(0.4):diffusealpha(1):visible(true)
-			self:queuecommand("SendRequest")
+			self:queuecommand("SendTestRequest")
 		else
 			self:visible(false)
 		end
   end,
 
+  -------------------------------------------------------------------
+  -- We can add this piece once we're actually able to get to the callback
+  -- and use the response for status codes and such.
+  LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+    Name="Test Thing",
+    Text="    Test Thing",
+    InitCommand=function(self)
+      self:visible(ThemePrefs.Get("EnableTest"))
+      self:horizalign(left)
+      DiffuseText(self)
+    end
+  },
+  -------------------------------------------------------------------
   RequestResponseTestActor(20, 0)..{
-		SendRequestCommand=function(self)
-      
-			if ThemePrefs.Get("EnableTest") then
-        SM("RequestResponseTestActor?")
-
-        -- TODO: figure out why doesn't appear to be triggering
-        -- the processor function...
-				self:playcommand("SubmissionRequestCommand", {
-					endpoint="api/v1",
-					method="GET",
-					timeout=10,
-					callback=NewSessionTestRequestProcessor,
-					args=self:GetParent()
-				})
-			end
+		SendTestRequestCommand=function(self)
+        SM("RequestResponseTestActor?") -- does fire
+        local details = {
+          endpoint="api/v1",
+          method="GET",
+          timeout=30,
+          callback=NewSessionTestRequestProcessor
+        }
+        self:playcommand("SubmissionRequestCommand", details)
+        -- SM("RequestResponseTestActor2?")
 		end
-	}
+	},
 }
+SM(t)
+
 -- -----------------------------------------------------------------------
 -- Loads the UnlocksCache from disk for SRPG unlocks.
 LoadUnlocksCache()
@@ -709,5 +718,4 @@ t[#t+1] = Def.ActorFrame {
 	}
 }
 -- -----------------------------------------------------------------------
-
 return t

@@ -537,10 +537,6 @@ local af = Def.ActorFrame {
 								usedCmod=(GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil),
 								comment=CreateCommentString(player),
 							}
-              Trace("Associated Chart Hash: " .. SL[pn].Streams.Hash)
-              Trace("Rate used for song: " .. body["player1"].rate)
-              Trace("Score obtained: " .. body["player1"].score)
-              Trace("C-Mod used: ", body["player1"].usedCmod)
 							sendRequest = true
 							submitForPlayer = true
 						end

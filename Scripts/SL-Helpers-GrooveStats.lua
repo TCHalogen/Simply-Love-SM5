@@ -60,6 +60,7 @@ end
 -- args: any, arguments that will be made accesible to the callback function. This
 --       can of any type as long as the callback knows what to do with it.
 RequestResponseActor = function(x, y)
+
 	local url_prefix = GrooveStatsURL()
 
 	return Def.ActorFrame{
