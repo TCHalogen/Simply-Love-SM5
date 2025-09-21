@@ -307,6 +307,24 @@ end
 
 LoadModules()
 
+-- Callback for new functionality test.
+local NewSessionTestRequestProcessor = function(res, testInfo)
+
+  -- not entirely sure how testInfo gets populated here,
+  -- nor am I sure how gsInfo seems to get information to the callback
+  -- guess we gotta find out!
+  if testInfo == nil then return end
+
+  local test = testInfo:GetChild("Test")
+  if res.error or res.statusCode ~= 200 then
+    local error = res.error and ToEnumShortString(res.error) or nil
+    if error == "Timeout" then
+      test:settext("Timed Out")
+    end
+  end
+
+end
+
 -- -----------------------------------------------------------------------
 -- The GrooveStats service info pane.
 -- We put this in ScreenSystemLayer because if people move through the menus too fast,
@@ -316,7 +334,7 @@ LoadModules()
 
 local NewSessionRequestProcessor = function(res, gsInfo)
 	if gsInfo == nil then return end
-	
+
 	local groovestats = gsInfo:GetChild("GrooveStats")
 	local service1 = gsInfo:GetChild("Service1")
 	local service2 = gsInfo:GetChild("Service2")
@@ -558,9 +576,59 @@ t[#t+1] = Def.ActorFrame{
 					args=self:GetParent()
 				})
 			end
+		end,
+	}
+}
+
+t[#t+1] = Def.ActorFrame{
+  Name="TestInfo",
+  InitCommand=function(self)
+    self:zoom(0.8):x(10):y(35)
+  end,
+  ScreenChangedMessageCommand=function(self)
+    local screen = SCREENMAN:GetTopScreen()
+		if screen:GetName() == "ScreenTitleMenu" or screen:GetName() == "ScreenTitleJoin" then
+			-- self:queuecommand("Reset")
+			self:diffusealpha(0):sleep(0.2):linear(0.4):diffusealpha(1):visible(true)
+			self:queuecommand("SendTestRequest")
+		else
+			self:visible(false)
+		end
+  end,
+
+  -------------------------------------------------------------------
+  -- We can add this piece once we're actually able to get to the callback
+  -- and use the response for status codes and such.
+  LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
+    Name="Test Thing",
+    Text="    Test Thing",
+    InitCommand=function(self)
+      self:visible(ThemePrefs.Get("EnableTest"))
+      self:horizalign(left)
+      DiffuseText(self)
+    end,
+    -- VisualStyleSelectedMessageCommand=function(self) 
+    --   DiffuseText(self) 
+    -- end,
+		-- ResetCommand=function(self) 
+    --   self:settext("")
+    -- end
+  },
+  -------------------------------------------------------------------
+  RequestResponseTestActor(20, 0)..{
+		SendTestRequestCommand=function(self)
+        local details = {
+          endpoint="api/v1",
+          method="GET",
+          timeout=30,
+          callback=NewSessionTestRequestProcessor,
+          args=self:GetParent()
+        }
+        self:playcommand("SubmissionRequest", details)
 		end
 	}
 }
+SM(t)
 
 -- -----------------------------------------------------------------------
 -- Loads the UnlocksCache from disk for SRPG unlocks.
@@ -663,5 +731,4 @@ t[#t+1] = Def.ActorFrame {
 	}
 }
 -- -----------------------------------------------------------------------
-
 return t

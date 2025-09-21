@@ -555,7 +555,7 @@ local af = Def.ActorFrame {
 			if sendRequest then
 				-- Unjoined players won't have the text displayed.
              
-                self:GetParent():GetChild("P1SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
+        self:GetParent():GetChild("P1SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
 				self:GetParent():GetChild("P2SubmitText"):settext(THEME:GetString("GrooveStats", "Submitting"))
 					
 				self:playcommand("MakeGrooveStatsRequest", {
@@ -568,6 +568,17 @@ local af = Def.ActorFrame {
 				args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
 				})
 			end
+
+      -- -- For the purpose of testing, we can isolate this out of the validation
+      -- -- checks for now
+      -- Trace("Testing submission...")
+      
+      -- self:playcommand("MakeTestRequest", {
+      --   -- endpoint=
+      --   body=JsonEncode(body),
+      --   timeout=30,
+      --   args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common"),
+      -- })
 		end
 	}
 }

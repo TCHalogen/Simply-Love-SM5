@@ -117,4 +117,11 @@ t[#t+1] = LoadActor("./Panes/default.lua", NumPanes)
 -- Since this actor also spawns the event overlay it must go on top of everything else
 t[#t+1] = LoadActor("./Shared/AutoSubmitScore.lua")
 
+
+-- For the purpose of external testing, let's set up a test harness that is separated
+-- from the AutoSubmitter, but still retains similar functionality; that way, we can
+-- test routing scores to a different server without risk of interacting with things
+-- like BS/GS.
+t[#t+1] = LoadActor("./Shared/AutoSubmitScoreTest.lua")
+
 return t
