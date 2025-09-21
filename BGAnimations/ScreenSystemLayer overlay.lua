@@ -314,14 +314,38 @@ local NewSessionTestRequestProcessor = function(res, testInfo)
   -- nor am I sure how gsInfo seems to get information to the callback
   -- guess we gotta find out!
   if testInfo == nil then return end
+  
+  -- SM(testInfo)
+  -- Trace("==========")
+  -- SM(res)
 
-  local test = testInfo:GetChild("Test")
+  local test = testInfo:GetChild("TestStatus")
+  -- testInfo:settext("gdasdasd?")
+  SL.Test.IsConnected = false
   if res.error or res.statusCode ~= 200 then
+    -- Test these returns on the server side.
+    SL.Test.Leaderboard = false
+    SL.Test.AutoSubmit = false
+    SL.Test.GetScores = false
     local error = res.error and ToEnumShortString(res.error) or nil
+
     if error == "Timeout" then
       test:settext("Timed Out")
     end
+    return;
   end
+
+  -- TODO: Server is emulating the status checks that GS likely has
+  -- and returning it in the body, so we can do our own service checking
+  -- For now, we can set them all to true.
+  SL.Test.IsConnected = true
+  SL.Test.AutoSubmit = true
+  SL.Test.GetScores = true
+  SL.Test.Leaderboard = true
+  
+  test:settext("✔ Connected to test server.")
+  local body = JsonDecode(res.body)
+  SM(body)
 
 end
 
@@ -600,8 +624,8 @@ t[#t+1] = Def.ActorFrame{
   -- We can add this piece once we're actually able to get to the callback
   -- and use the response for status codes and such.
   LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-    Name="Test Thing",
-    Text="    Test Thing",
+    Name="TestStatus",
+    Text="    Test Status",
     InitCommand=function(self)
       self:visible(ThemePrefs.Get("EnableTest"))
       self:horizalign(left)
@@ -615,8 +639,9 @@ t[#t+1] = Def.ActorFrame{
     -- end
   },
   -------------------------------------------------------------------
-  RequestResponseTestActor(20, 0)..{
+  RequestResponseTestActor(5, 30)..{
 		SendTestRequestCommand=function(self)
+      if ThemePrefs.Get("EnableTest") then
         local details = {
           endpoint="api/v1",
           method="GET",
@@ -625,10 +650,10 @@ t[#t+1] = Def.ActorFrame{
           args=self:GetParent()
         }
         self:playcommand("SubmissionRequest", details)
+      end
 		end
 	}
 }
-SM(t)
 
 -- -----------------------------------------------------------------------
 -- Loads the UnlocksCache from disk for SRPG unlocks.

@@ -16,15 +16,11 @@
 RequestResponseTestActor = function(x, y)
   -- Trace("Do we even hit the start of this function?")
   local url_prefix = "http://127.0.0.1:5000/"
-
-  SM("RequestResponseTestActorFunc?") -- doesn't fire
-
+ -- doesn't fire
   return Def.ActorFrame{
     SubmissionRequestCommand=function(self, params)
-      -- SM("Submission request command!")
-      -- -- local url_prefix = TestURL()
       self:stoptweening()
-      -- SM(params, 10)
+      SM(params, 10)
       if not params then
         Warn("No params specified for SubmissionRequestCommand.")
       end
@@ -39,9 +35,9 @@ RequestResponseTestActor = function(x, y)
       local endpoint = params.endpoint or ""
       local headers = params.headers
       local body = params.body
+      local method = params.method
 
-      -- add dynamism later
-      local method = "GET"
+      SM(params, 15)
 
       self.request_handler = NETWORK:HttpRequest{
         url=url_prefix..endpoint, -- PoC captures at 5000 for now
@@ -51,7 +47,6 @@ RequestResponseTestActor = function(x, y)
         connectTimeout=60,
         transferTimeout=60,
         onResponse=function(res)
-          SM(res, 10)
           -- we've received a response, so allow us to receive others
           self.request_handler = nil
 
@@ -74,6 +69,8 @@ RequestResponseTestActor = function(x, y)
                 params.callback(res, params.args)
               end
             end
+
+            self:GetChild("Spinner"):visible(false)
           end
         end
       }
@@ -100,17 +97,18 @@ RequestResponseTestActor = function(x, y)
 					-- Leaderboard should be white since it's on a black background.
 					-- self:diffuse(DarkUI() and name ~= "Leaderboard" and Color.Black or Color.White)
 				end,
-				-- UpdateSpinnerCommand=function(self, params)
-				-- 	-- Only display the countdown after we've waiting for some amount of time.
-				-- 	if params.timeout - params.remaining_time > 2 then
-				-- 		self:visible(true)
-				-- 	else
-				-- 		self:visible(false)
-				-- 	end
-				-- 	if params.remaining_time > 1 then
-				-- 		self:settext(math.floor(params.remaining_time))
-				-- 	end
-				-- end
+				UpdateSpinnerCommand=function(self, params)
+					-- Only display the countdown after we've waiting for some amount of time.
+          SM(params)
+					if params.timeout - params.remaining_time > 2 then
+						self:visible(true)
+					else
+						self:visible(false)
+					end
+					if params.remaining_time > 1 then
+						self:settext(math.floor(params.remaining_time))
+					end
+				end
 			}
 		},
   }

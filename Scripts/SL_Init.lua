@@ -477,7 +477,12 @@ SL = {
   -- Fields used for the purpose of connecting to the external test
   -- service.
   Test = {
-    AutoSubmit = false
+    IsConnected = false,
+
+    -- Seems like GrooveStats returns back service enablement? We'll set it.
+    AutoSubmit = false,
+    GetScores = false,
+    Leaderboard = false
   },
 	-- Fields used to determine whether or not we can connect to the
 	-- GrooveStats services.
