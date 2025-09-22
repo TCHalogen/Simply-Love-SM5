@@ -14,6 +14,7 @@ local external_module_enabled = true
 if external_module_enabled then
   t["ScreenTitleMenu"] = LoadActor("./external_server/server_connect.lua")
   t["ScreenTitleJoin"] = LoadActor("./external_server/server_connect.lua")
+  t["ScreenEvaluationStage"] = LoadActor("./external_server/score_submit.lua")
 end
 
 return t;
