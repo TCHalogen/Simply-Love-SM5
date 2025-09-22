@@ -1,24 +1,11 @@
--- TestURL = function()
---   -- For now, we're just going to mirror GrooveStats' helper structure, but
---   -- this will likely deviate once actual functionality gets put into place.
---   local test = ThemePrefs.Get("EnableTest") -- not used at the moment, but for later
---   local url_prefix = "http://127.0.0.1:5000/"
---     Trace("Testing TestURL")
---   return url_prefix
-
--- end
-
--- ----------
--- See: RequestResponseActor, SL-Helpers-GrooveStats.lua
--- This isn't quite the same, but the functionality is derived from
--- it.
--- ----------
-RequestResponseTestActor = function(x, y)
+ExternalRequestResponseActor = function(x, y)
   -- Trace("Do we even hit the start of this function?")
   local url_prefix = "http://127.0.0.1:5000/"
  -- doesn't fire
+
+  
   return Def.ActorFrame{
-    SubmissionRequestCommand=function(self, params)
+    ExternalServerRequestSubmissionCommand=function(self, params)
       self:stoptweening()
       if not params then
         Warn("No params specified for SubmissionRequestCommand.")

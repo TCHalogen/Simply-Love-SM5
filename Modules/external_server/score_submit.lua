@@ -1,9 +1,3 @@
--- There's an option in place for enabling the test harness; we can use
--- similar conditions for whether or not we want to keep it up.
-if not IsTestServiceAllowed(SL.Test.AutoSubmit) or GAMESTATE:IsCourseMode() then return end
--- For now, we'll take these from the GrooveStats file.
--- If integration w/ GS becomes an option, we can deduplicate it later.
-Trace("Past opening line?")
 local GetJudgmentCounts = function(player)
 	local counts = GetExJudgmentCounts(player)
 	local translation = {
@@ -64,21 +58,16 @@ local GetRescoredJudgmentCounts = function(player)
 	return rescored
 end
 
--- Trace("Before Actor Frame")
-
-local af = Def.ActorFrame {
-  Name="AutoSubmitTest",
-  OnCommand=function(self)
-    Trace("Inside of actor frame, before Request Response Test Actor")
+return Def.ActorFrame {
+  Name="ExternalServerAutoSubmit",
+  ModuleCommand=function(self)
+    -- SM("Does this get hit?")
+    self:playcommand("ExternalServerConnection")
   end,
-
-  -- Once again derived from the existing GrooveStats
-  -- process; will integrate and dedupe if/when necessary.
-  RequestResponseTestActor(17, 50)..{
-    
-    OnCommand=function(self)
+  ExternalRequestResponseActor(17, 50)..{
+    ExternalServerConnectionCommand=function(self)
       -- SM("RequestResponseTestActor from ScreenEvalCommon")
-      Trace("OnCommand hit?")
+      SM("Does THIS get hit?")
       local sendRequest = false
       local headers = {}
       local query = {}
@@ -133,6 +122,7 @@ local af = Def.ActorFrame {
                 usedCmod=(GAMESTATE:GetPlayerState(pn):GetPlayerOptions("ModsLevel_Preferred"):CMod() ~= nil),
                 comment=CreateCommentString(player) -- ??
               }
+              SM(score_details)
               body["player"..i] = score_details
               sendRequest = true
               submitForPlayer = true
@@ -148,11 +138,6 @@ local af = Def.ActorFrame {
 
 
       if sendRequest then
-        Trace("Query: ")
-        SM(query)
-
-        Trace("Body: ")
-        SM(body)
         -- Add the UI text for showing the submission in progress.
         -- self:GetParent():etcstuffyadayada
         -- self:GetParent():etcstuffyadayada
@@ -162,19 +147,11 @@ local af = Def.ActorFrame {
           headers=headers,
           body=JsonEncode(body),
           timeout=30,
-          -- callback=AutoSubmitTestRequestProcessor,
+          callback=ExternalResponseProcessor,
           args=SCREENMAN:GetTopScreen():GetChild("Overlay"):GetChild("ScreenEval Common")
         }
-        self:playcommand("SubmissionRequest", details)
+        self:playcommand("ExternalServerRequestSubmission", details)
       end
-
     end
   }
 }
-
--- -- Anonymous callback function to handle the submission.
--- local AutoSubmitTestRequestProcessor = function(res, overlay)
---   SCREENMAN:SystemMessage("AutoSubmitTestRequestProcessor from ScreenEvalCommon")
-  
--- end
-return af

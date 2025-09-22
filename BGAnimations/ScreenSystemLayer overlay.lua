@@ -307,46 +307,6 @@ end
 
 LoadModules()
 
--- Callback for new functionality test.
-local NewSessionTestRequestProcessor = function(res, testInfo)
-
-  -- not entirely sure how testInfo gets populated here,
-  -- nor am I sure how gsInfo seems to get information to the callback
-  -- guess we gotta find out!
-  if testInfo == nil then return end
-  
-  -- SM(testInfo)
-  -- Trace("==========")
-  -- SM(res)
-
-  local test = testInfo:GetChild("TestStatus")
-  -- testInfo:settext("gdasdasd?")
-  SL.Test.IsConnected = false
-  if res.error or res.statusCode ~= 200 then
-    -- Test these returns on the server side.
-    SL.Test.Leaderboard = false
-    SL.Test.AutoSubmit = false
-    SL.Test.GetScores = false
-    local error = res.error and ToEnumShortString(res.error) or nil
-
-    -- if error == "Timeout" then
-      test:settext("Unable to connect to test server.")
-    -- end
-    return;
-  end
-
-  -- TODO: Server is emulating the status checks that GS likely has
-  -- and returning it in the body, so we can do our own service checking
-  -- For now, we can set them all to true.
-  SL.Test.IsConnected = true
-  SL.Test.AutoSubmit = true
-  SL.Test.GetScores = true
-  SL.Test.Leaderboard = true
-
-  test:settext("✔ Connected to test server.")
-  local body = JsonDecode(res.body)
-end
-
 -- -----------------------------------------------------------------------
 -- The GrooveStats service info pane.
 -- We put this in ScreenSystemLayer because if people move through the menus too fast,
@@ -599,57 +559,6 @@ t[#t+1] = Def.ActorFrame{
 				})
 			end
 		end,
-	}
-}
-
-t[#t+1] = Def.ActorFrame{
-  Name="TestInfo",
-  InitCommand=function(self)
-    self:zoom(0.8):x(10):y(35)
-  end,
-  ScreenChangedMessageCommand=function(self)
-    local screen = SCREENMAN:GetTopScreen()
-		if screen:GetName() == "ScreenTitleMenu" or screen:GetName() == "ScreenTitleJoin" then
-			-- self:queuecommand("Reset")
-			self:diffusealpha(0):sleep(0.2):linear(0.4):diffusealpha(1):visible(true)
-			self:queuecommand("SendTestRequest")
-		else
-			self:visible(false)
-		end
-  end,
-
-  -------------------------------------------------------------------
-  -- We can add this piece once we're actually able to get to the callback
-  -- and use the response for status codes and such.
-  LoadFont(ThemePrefs.Get("ThemeFont") .. " Normal")..{
-    Name="TestStatus",
-    Text="    Test Status",
-    InitCommand=function(self)
-      self:visible(ThemePrefs.Get("EnableTest"))
-      self:horizalign(left)
-      DiffuseText(self)
-    end,
-    -- VisualStyleSelectedMessageCommand=function(self) 
-    --   DiffuseText(self) 
-    -- end,
-		-- ResetCommand=function(self) 
-    --   self:settext("")
-    -- end
-  },
-  -------------------------------------------------------------------
-  RequestResponseTestActor(5, 30)..{
-		SendTestRequestCommand=function(self)
-      if ThemePrefs.Get("EnableTest") then
-        local details = {
-          endpoint="api/v1",
-          method="GET",
-          timeout=30,
-          callback=NewSessionTestRequestProcessor,
-          args=self:GetParent()
-        }
-        self:playcommand("SubmissionRequest", details)
-      end
-		end
 	}
 }
 
